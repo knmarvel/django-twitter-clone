@@ -2,10 +2,17 @@
 {% block content %}
 <h1>Tweet</h1>
 <div class="tweet">
+    <a class="link-to-tweet" href={% url "tweet" pk=tweet.pk %}>Link to Tweet Detail</a>
     <ul>
-    <li><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a></li>
-    <li>{{tweet.creation_date}}</li>
-    <li>{{tweet.tweet}}</li>
+        <li>
+            <b>Author: </b><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a>
+        </li>
+        <li>
+            <b>Written: </b>{{tweet.creation_date}}
+        </li>
+        <li>
+            <b>Tweet: </b> {{tweet.tweet}}
+        </li>
     </ul>
 </div>
 

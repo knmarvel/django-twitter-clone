@@ -36,22 +36,33 @@
             {% endif%}
         </li>
     </ul>
-    {% if request.user.is_authenticated and not following %}
-        <a href={% url 'follow_user' slug=viewed_user.slug%}>
-            Follow this user.
-        </a>
-    {% else %}
-        You are following this user.
-        <a href={% url 'unfollow_user' slug=viewed_user.slug%}>
-            Unfollow this user.
-        </a>
+    {% if request.user != viewed_user %}
+        {% if request.user.is_authenticated and not following %}
+            <a href={% url 'follow_user' slug=viewed_user.slug%}>
+                Follow this user.
+            </a>
+        {% else %}
+            You are following this user.
+            <a href={% url 'unfollow_user' slug=viewed_user.slug%}>
+                Unfollow this user.
+            </a>
+        {% endif %}
     {% endif %}
     <h1>{{viewed_user.username}}'s Tweets</h1>
 {% for tweet in user_tweets%}
+<hr />
 <div class="tweet">
-    <ul><li><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a></li>
-    <li>{{tweet.creation_date}}</li>
-    <li><a href={% url "tweet" pk=tweet.pk %}> {{tweet.tweet}} </a></li>
+    <a class="link-to-tweet" href={% url "tweet" pk=tweet.pk %}>Link to Tweet Detail</a>
+    <ul>
+        <li>
+            <b>Author: </b><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a>
+        </li>
+        <li>
+            <b>Written: </b>{{tweet.creation_date}}
+        </li>
+        <li>
+            <b>Tweet: </b> {{tweet.tweet}}
+        </li>
     </ul>
 </div>
 {% endfor %}

@@ -2,10 +2,19 @@
 {% block content %}
 <h1>All Tweets</h1>
 {% for tweet in all_tweets%}
+<hr />
 <div class="tweet">
-    <ul><li><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a></li>
-    <li>{{tweet.creation_date}}</li>
-    <li><a href={% url "tweet" pk=tweet.pk %}> {{tweet.tweet}} </a></li>
+    <a class="link-to-tweet" href={% url "tweet" pk=tweet.pk %}>Link to Tweet Detail</a>
+    <ul>
+        <li>
+            <b>Author: </b><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a>
+        </li>
+        <li>
+            <b>Written: </b>{{tweet.creation_date}}
+        </li>
+        <li>
+            <b>Tweet: </b> {{tweet.tweet}}
+        </li>
     </ul>
 </div>
 {% endfor %}

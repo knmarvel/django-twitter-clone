@@ -3,20 +3,31 @@ from django.contrib.auth import login
 from twitteruser.forms import AddTwitterUser
 from twitteruser.models import TwitterUser
 from tweet.models import Tweet
+from notification.models import Notification
 
 
 def index(request):
     if request.user.is_authenticated:
         html = "index.html"
-        tweets = Tweet.objects.all()
-        return render(request, html, {"tweets": tweets})
+        tweets = Tweet.objects.filter(
+            author__in=request.user.following.all()).order_by(
+                "-creation_date")
+        notifications = Notification.objects.filter(
+            notified_user=request.user).filter(viewed=False)
+        return render(request, html, {
+            "tweets": tweets,
+            'notifications': notifications})
     return redirect("/login/")
 
 
 def all_users(request):
     html = "all_users.html"
     users = TwitterUser.objects.all()
-    return render(request, html, {'users': users})
+    notifications = Notification.objects.filter(
+        notified_user=request.user).filter(viewed=False)
+    return render(request, html, {
+        'users': users,
+        'notifications': notifications})
 
 
 def adduser_view(request):
@@ -34,6 +45,7 @@ def adduser_view(request):
             )
             new_user = TwitterUser.objects.last()
             new_user.set_password(raw_password=data['password'])
+            new_user.following.add(new_user)
             new_user.save()
             login(request, new_user)
             return HttpResponseRedirect(
@@ -50,12 +62,16 @@ def user_detail(request, slug):
     following = False
     if viewed_user in request.user.following.all():
         following = True
-    user_tweets = Tweet.objects.filter(author=viewed_user)
+    user_tweets = Tweet.objects.filter(author=viewed_user).order_by(
+                "-creation_date")
+    notifications = Notification.objects.filter(
+        notified_user=request.user).filter(viewed=False)
     return render(request, html, {
         'viewed_user': viewed_user,
         'following': following,
         'followers': followers,
         'user_tweets': user_tweets,
+        'notifications': notifications
         })
 
 

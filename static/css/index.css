@@ -1,0 +1,9 @@
+.tweet {
+    border: 1px solid black;
+    background-color: antiquewhite;
+}
+
+.tweet-notifications{
+    border: 1px solid black;
+    background-color: yellow;
+}

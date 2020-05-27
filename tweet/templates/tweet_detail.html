@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Tweet</h1>
+<div class="tweet">
+    <ul>
+    <li><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a></li>
+    <li>{{tweet.creation_date}}</li>
+    <li>{{tweet.tweet}}</li>
+    </ul>
+</div>
+
+{% endblock %} 

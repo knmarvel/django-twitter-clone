@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'r@5&wzb*aa6il6f&u8ck$-+zm18-znxep(lx1v^al#id9(93l5'
+SECRET_KEY = os.environ.get('TWITTER_SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication.apps.AuthenticationConfig',
+    'notification.apps.NotificationConfig',
+    'tweet.apps.TweetConfig',
+    'twitteruser.apps.TwitteruserConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +58,7 @@ ROOT_URLCONF = 'twitterclone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,4 +121,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+APP_PATH_AUTH = BASE_DIR + '/authentication/',
+APP_PATH_NOT = BASE_DIR + '/notification/',
+APP_PATH_TWEET = BASE_DIR + '/tweet/',
+APP_PATH_USER = BASE_DIR + '/twitteruser/',
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    (os.path.join(BASE_DIR, 'static')),
+    (os.path.join(APP_PATH_AUTH[0], 'static')),
+    (os.path.join(APP_PATH_NOT[0], 'static')),
+    (os.path.join(APP_PATH_TWEET[0], 'static')),
+    (os.path.join(APP_PATH_USER[0], 'static'))
+]
+
+AUTH_USER_MODEL = 'twitteruser.TwitterUser'

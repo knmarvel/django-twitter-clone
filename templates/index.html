@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>HOMEPAGE</h1>
+    <h2><a href={%url 'all_users'%}> See all users</a></h2>
+    <h1>Tweet Feed</h1>
+{% for tweet in tweets%}
+<div class="tweet">
+    <ul><li><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a></li>
+    <li>{{tweet.creation_date}}</li>
+    <li><a href={% url "tweet" pk=tweet.pk %}> {{tweet.tweet}} </a></li>
+    </ul>
+</div>
+{% endfor %}
+{% endblock %} 

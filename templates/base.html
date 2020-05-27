@@ -1,0 +1,37 @@
+{% load static %}
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+    <title>Kano's Django Twitter Clone</title>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="link-back-home">
+        <h1 class="page-title">
+          KANO'S DJANGO TWITTER CLONE
+        </h1>
+      </a>
+    </header>
+    {% if request.user.is_authenticated %}
+    <div class="logged-in-user-info">
+      <h2>About logged in users: </h2>
+      <b>Username: </b><a href={% url "user_detail" slug=request.user.slug %}> @{{request.user.username}} </a> <br />
+      <b>Display Name: </b>{{ request.user.display_name }} <br />
+    <a href="/logout/">Logout</a>
+    {% elif "login" not in request.path %}
+    Want to <a href="/login/">login</a>?
+    {% endif %}
+    </div>
+    <div class="page-content">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <hr />
+    <p class="footer">
+      Kano Marvel, 2020
+      <br />
+      Find me on <a href="https://github.com/knmarvel">Github</a>
+      <br />
+    </p>
+  </body>
+</html>

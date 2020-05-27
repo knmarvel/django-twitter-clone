@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>@{{viewed_user.username}}</h1>
+    <ul>
+        <li><b>Display Name: </b>{{viewed_user.display_name}}</li>
+        <li><b>Homepage: </b> {{viewed_user.homepage}} </li>
+        <li><b>Age: </b> {{viewed_user.age}} </li>
+        <li><b>Following {{viewed_user.following.all|length}} user{% if viewed_user.following.all|length != 1 %}s {% endif %}: </b> 
+            {% if viewed_user.following.all %}
+                <ul>
+                {% for followed in viewed_user.following.all %}
+                    <li>
+                        <a href={%url 'user_detail' slug=followed.slug %}>
+                            @{{followed.username}}
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                None
+            {% endif %}
+        </li>
+        <li><b>{{followers.all|length}} Follower{% if followers.all|length != 1 %}s {% endif %}:</b>
+            {% if followers %}
+                <ul>
+                {% for follower in followers %}
+                    <li>
+                        <a href={%url 'user_detail' slug=follower.slug %}>
+                            @{{follower.username}}
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+            None
+            {% endif%}
+        </li>
+    </ul>
+    {% if request.user.is_authenticated and not following %}
+        <a href={% url 'follow_user' slug=viewed_user.slug%}>
+            Follow this user.
+        </a>
+    {% else %}
+        You are following this user.
+        <a href={% url 'unfollow_user' slug=viewed_user.slug%}>
+            Unfollow this user.
+        </a>
+    {% endif %}
+    <h1>{{viewed_user.username}}'s Tweets</h1>
+{% for tweet in user_tweets%}
+<div class="tweet">
+    <ul><li><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a></li>
+    <li>{{tweet.creation_date}}</li>
+    <li><a href={% url "tweet" pk=tweet.pk %}> {{tweet.tweet}} </a></li>
+    </ul>
+</div>
+{% endfor %}
+{% endblock %} 

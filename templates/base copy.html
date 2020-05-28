@@ -15,7 +15,7 @@
     {% if user.is_authenticated %}
     <div class="logged-in-user-info">
       <h2>About logged in users: </h2>
-      <b>Username: </b><a href={% url "user_detail" slug=user.slug %}> @{{user.username}} </a> <br />
+      <!-- <b>Username: </b><a href={% url "user_detail" slug=user.slug %}> @{{user.username}} </a> <br /> -->
       <b>Display Name: </b>{{ user.display_name }} <br />
       {% if notifications %}
       <div>

@@ -16,12 +16,5 @@ class Tweet(models.Model):
 
     creation_date = models.DateTimeField()
 
-    likes = models.ManyToManyField(
-        TwitterUser,
-        related_name="user_likes",
-        null=True,
-        blank=True
-    )
-
     def __str__(self):
         return self.tweet

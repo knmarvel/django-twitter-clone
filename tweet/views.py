@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
 from tweet.forms import TweetForm
 from tweet.models import Tweet
 from notification.models import Notification
@@ -33,18 +33,20 @@ def tweet(request, pk):
 
 
 def add_tweet(request):
-    html = "tweet_form.html"
-    form = TweetForm()
-    if request.method == "POST":
-        filled_form = TweetForm(request.POST)
-        if filled_form.is_valid():
-            data = filled_form.cleaned_data
-            Tweet.objects.create(
-                tweet=data['tweet'],
-                author=request.user,
-                creation_date=datetime.now()
-            )
-            make_notifications(Tweet.objects.last())
-            return HttpResponseRedirect(
-                request.GET.get('next', reverse('homepage')),)
-    return render(request, html, {"form": form})
+    if request.user.is_authenticated:
+        html = "tweet_form.html"
+        form = TweetForm()
+        if request.method == "POST":
+            filled_form = TweetForm(request.POST)
+            if filled_form.is_valid():
+                data = filled_form.cleaned_data
+                Tweet.objects.create(
+                    tweet=data['tweet'],
+                    author=request.user,
+                    creation_date=datetime.now()
+                )
+                make_notifications(Tweet.objects.last())
+                return HttpResponseRedirect(
+                    request.GET.get('next', reverse('homepage')),)
+        return render(request, html, {"form": form})
+    return redirect("/login/")

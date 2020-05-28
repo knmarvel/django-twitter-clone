@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Notifications for <a href={% url "notifications" %}> @{{request.user.username}}</a></h1>
+{% comment %}
+<h1>Notifications for <a href={% url "user_detail" slug=user.slug %}> @{{user.username}}</a></h1>
     <h2><a href={%url 'all_users'%}> See all users</a></h2>
     <h1>Tweet Feed</h1>
-{% if new_tweets %}
-<h3>You have {{new_tweets.all|length}} New Notifications</h3>
+{% endcomment %}
+<h3>You have {{notes.all|length}} New Notifications</h3>
 {% for tweet in new_tweets%}
 <hr />
 <div class="tweet-notifications">
@@ -22,30 +23,4 @@
     </ul>
 </div>
 {% endfor %}
-{% elif old_tweets %}
-You have no new notifications.
-{% endif %}
-{% if old_tweets %}
-<h3>Already viewed notifications</h3>
-{% for tweet in old_tweets%}
-<hr />
-<div class="tweet">
-    <a class="link-to-tweet" href={% url "tweet" pk=tweet.pk %}>Link to Tweet Detail</a>
-    <ul>
-        <li>
-            <b>Author: </b><a href={% url "user_detail" slug=tweet.author.slug %}> @{{tweet.author.username}} </a>
-        </li>
-        <li>
-            <b>Written: </b>{{tweet.creation_date}}
-        </li>
-        <li>
-            <b>Tweet: </b> {{tweet.tweet}}
-        </li>
-    </ul>
-</div>
-{% endfor %}
-{% endif %}
-{% if not new_tweets and not old_tweets %}
-You have no notifications.
-{% endif %}
-{% endblock %} 
+{% endblock %}

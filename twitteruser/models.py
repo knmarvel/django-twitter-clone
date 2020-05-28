@@ -28,7 +28,7 @@ class TwitterUser(AbstractUser):
         'self',
         symmetrical=False,
         blank=True,
-        null=True)
+    )
 
     def get_absolute_url(self):
         return reverse("ticket_detail", kwargs={"slug": self.slug})

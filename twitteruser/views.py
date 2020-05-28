@@ -23,8 +23,10 @@ def index(request):
 def all_users(request):
     html = "all_users.html"
     users = TwitterUser.objects.all()
-    notifications = Notification.objects.filter(
-        notified_user=request.user).filter(viewed=False)
+    notifications = []
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(
+            notified_user=request.user).filter(viewed=False)
     return render(request, html, {
         'users': users,
         'notifications': notifications})
@@ -60,12 +62,14 @@ def user_detail(request, slug):
     viewed_user = TwitterUser.objects.get(slug=slug)
     followers = TwitterUser.objects.filter(following=viewed_user)
     following = False
-    if viewed_user in request.user.following.all():
-        following = True
     user_tweets = Tweet.objects.filter(author=viewed_user).order_by(
                 "-creation_date")
-    notifications = Notification.objects.filter(
-        notified_user=request.user).filter(viewed=False)
+    notifications = []
+    if request.user.is_authenticated:
+        if viewed_user in request.user.following.all():
+            following = True
+        notifications = Notification.objects.filter(
+            notified_user=request.user).filter(viewed=False)
     return render(request, html, {
         'viewed_user': viewed_user,
         'following': following,
@@ -76,16 +80,18 @@ def user_detail(request, slug):
 
 
 def follow_user(request, slug):
-    my_user = TwitterUser.objects.get(username=request.user.username)
-    viewed_user = TwitterUser.objects.get(slug=slug)
-    my_user.following.add(viewed_user)
-    my_user.save()
+    if request.user.is_authenticated:
+        my_user = TwitterUser.objects.get(username=request.user.username)
+        viewed_user = TwitterUser.objects.get(slug=slug)
+        my_user.following.add(viewed_user)
+        my_user.save()
     return redirect("/user/" + slug)
 
 
 def unfollow_user(request, slug):
-    my_user = TwitterUser.objects.get(username=request.user.username)
-    viewed_user = TwitterUser.objects.get(slug=slug)
-    my_user.following.remove(viewed_user)
-    my_user.save()
+    if request.user.is_authenticated:
+        my_user = TwitterUser.objects.get(username=request.user.username)
+        viewed_user = TwitterUser.objects.get(slug=slug)
+        my_user.following.remove(viewed_user)
+        my_user.save()
     return redirect("/user/" + slug)

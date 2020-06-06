@@ -21,16 +21,18 @@ def index(request):
     return redirect("/login/")
 
 
-def all_users(request):
+class All_Users(View):
     html = "all_users.html"
-    users = TwitterUser.objects.all()
-    notifications = []
-    if request.user.is_authenticated:
-        notifications = Notification.objects.filter(
-            notified_user=request.user).filter(viewed=False)
-    return render(request, html, {
-        'users': users,
-        'notifications': notifications})
+
+    def get(self, request):
+        users = TwitterUser.objects.all()
+        notifications = []
+        if request.user.is_authenticated:
+            notifications = Notification.objects.filter(
+                notified_user=request.user).filter(viewed=False)
+        return render(request, self.html, {
+            'users': users,
+            'notifications': notifications})
 
 
 class AddUser_View(View):

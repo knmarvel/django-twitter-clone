@@ -1,11 +1,11 @@
 from django.urls import path
-from twitteruser.views import AddUser_View
+from twitteruser.views import AddUser_View, All_Users
 
 from . import views
 
 urlpatterns = [
     path("", views.index, name="homepage"),
-    path("users/", views.all_users, name="all_users"),
+    path("users/", All_Users.as_view(), name="all_users"),
     path("user/<str:slug>/follow_user/",
          views.follow_user,
          name="follow_user"),

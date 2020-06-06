@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
 from django.contrib.auth import login
+from django.views import View
 from twitteruser.forms import AddTwitterUser
 from twitteruser.models import TwitterUser
 from tweet.models import Tweet
@@ -32,9 +33,16 @@ def all_users(request):
         'notifications': notifications})
 
 
-def adduser_view(request):
-    if request.method == "POST":
-        form = AddTwitterUser(request.POST)
+class AddUser_View(View):
+    form_class = AddTwitterUser
+    html = 'adduser_form.html'
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.html, {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
         if form.is_valid():
             data = form.cleaned_data
             TwitterUser.objects.create(
@@ -52,9 +60,7 @@ def adduser_view(request):
             login(request, new_user)
             return HttpResponseRedirect(
                 request.GET.get('next', reverse('homepage')))
-        return render(request, "adduser_form.html", {"form": form})
-    form = AddTwitterUser()
-    return render(request, "adduser_form.html", {"form": form})
+        return render(request, self.html, {"form": form})
 
 
 def user_detail(request, slug):

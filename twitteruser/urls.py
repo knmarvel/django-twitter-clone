@@ -1,4 +1,5 @@
 from django.urls import path
+from twitteruser.views import AddUser_View
 
 from . import views
 
@@ -12,5 +13,5 @@ urlpatterns = [
          views.unfollow_user,
          name="unfollow_user"),
     path("user/<str:slug>/", views.user_detail, name="user_detail"),
-    path("adduser/", views.adduser_view, name="adduser"),
+    path("adduser/", AddUser_View.as_view(), name="adduser"),
 ]
